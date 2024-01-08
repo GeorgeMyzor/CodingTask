@@ -1,3 +1,9 @@
+using CodingTask.Repositories;
+using CodingTask.Services;
+using Microsoft.Extensions.Configuration;
+using Npgsql;
+using System.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +12,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+var connectionString = builder.Configuration.GetSection("ConnectionString").Get<string>();
+builder.Services.AddScoped<IDbConnection>(c => new NpgsqlConnection(connectionString));
+builder.Services.AddScoped<FacilityRepository>();
+builder.Services.AddScoped<FacilityService>();
 
 var app = builder.Build();
 
