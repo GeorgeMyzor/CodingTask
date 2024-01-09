@@ -17,12 +17,12 @@ namespace CodingTask.Repositories
         {
             string sql = @"
                 SELECT 
-                    CONCAT(patients.first_name, ', ', patients.last_name) as full_name,
+                    CONCAT(patients.last_name, ', ', patients.first_name) as full_name,
 	            CASE WHEN patients.age < 16 
 	                THEN 'A' 
 		            ELSE 'B' 
 	            END as category,
-	                STRING_AGG (facilities.city, ', ') as visited_cities,
+	                STRING_AGG (DISTINCT facilities.city, ', ') as visited_cities,
 	                STRING_AGG (payers.city, ', ') AS payer_city
                 FROM patients
                 JOIN encounters ON patients.id = encounters.patient_id

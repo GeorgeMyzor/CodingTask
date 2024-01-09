@@ -5,14 +5,14 @@ services:
     image: postgres:latest
     environment:
       POSTGRES_DB: my_db
-      POSTGRES_USER: my_username
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: my_password
     ports:
       - "5432:5432"
     volumes:
       - ./data:/var/lib/postgresql/data
-      - ./init_schema.sql:/docker-entrypoint-initdb.d/init_schema.sql
       - ./init_data.sql:/docker-entrypoint-initdb.d/init_data.sql
+      
   codingtask:
     image: ${DOCKER_REGISTRY-}codingtask
     build:
