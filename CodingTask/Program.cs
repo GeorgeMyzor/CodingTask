@@ -1,6 +1,6 @@
+using CodingTask.Middleware;
 using CodingTask.Repositories;
 using CodingTask.Services;
-using Microsoft.Extensions.Configuration;
 using Npgsql;
 using System.Data;
 
@@ -14,7 +14,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetSection("ConnectionString").Get<string>();
 builder.Services.AddScoped<IDbConnection>(c => new NpgsqlConnection(connectionString));
+builder.Services.AddScoped<PatientRepository>();
 builder.Services.AddScoped<FacilityRepository>();
+builder.Services.AddScoped<PatientService>();
 builder.Services.AddScoped<FacilityService>();
 
 var app = builder.Build();
@@ -29,6 +31,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseMiddleware<CustomExceptionHandlerMiddleware>();
 
 app.MapControllers();
 

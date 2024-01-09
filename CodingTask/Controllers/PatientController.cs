@@ -1,4 +1,4 @@
-using CodingTask.Repositories;
+using CodingTask.Models;
 using CodingTask.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,32 +8,32 @@ namespace CodingTask.Controllers
     [Route("[controller]")]
     public class PatientController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
         private readonly ILogger<PatientController> _logger;
+        private readonly PatientService _patientService;
         private readonly FacilityService _facilityService;
 
-        public PatientController(ILogger<PatientController> logger, FacilityService facilityService)
+        public PatientController(ILogger<PatientController> logger, PatientService patientService, FacilityService facilityService)
         {
             _logger = logger;
+            _patientService = patientService;
             _facilityService = facilityService;
         }
 
-        [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        [HttpGet]
+        [Route("GetPatientsWithCustomInfo")]
+        public async Task<ActionResult<IEnumerable<PatientResponse>>> GetPatientsWithCustomInfo()
+        {
+            var facilities = await _patientService.GetPatientsWithCustomInfo();
+
+            return Ok(facilities);
+        }
+
+        [HttpGet]
+        [Route("GetTest")]
+        public ActionResult GetTest()
         {
             _facilityService.GetAllEntities();
-
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+            return Ok();
         }
     }
 }

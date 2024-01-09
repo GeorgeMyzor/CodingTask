@@ -14,7 +14,6 @@ namespace CodingTask.Services
 
         public IEnumerable<Facility> GetAllEntities()
         {
-            // Additional business logic if needed
             return _facilityRepository.GetAll();
         }
     }
